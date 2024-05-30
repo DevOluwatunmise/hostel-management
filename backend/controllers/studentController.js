@@ -129,11 +129,93 @@ const updateStudentProfile = asyncHandler(async (req, res) => {
   }
 });
 
-const changeStudentRoom = asyncHandler(async (req, res) => {});
+const changeStudentRoom = asyncHandler(async (req, res) => {
+  const {studentId, newRoomNum} = req.body
 
-const updateCheckedInStatus = asyncHandler(async (req, res) => {});
+  const student = await Student.findById(studentId)
 
-const deleteStudent = asyncHandler(async (req, res) => {});
+  if(!student) {
+    return res.status(404).json({message: "Student noy found"})
+  }
+
+  const currentRoom = await Room.findById(student.room)
+
+  if(currentRoom) {
+    currentRoom.roomOccupancy = currentRoom.roomOccupancy.filter(
+      (occupant) => occupant.toString() !== studentId
+    )
+    
+    if(currentRoom.roomOccupancy.length < currentRoom.roomCapacity) {
+      currentRoom.status = "available"
+    }
+
+    await currentRoom.save()
+  }
+
+  const newRoom = await Room.findOne({roomNumber: newRoomNum});
+
+  if (!newRoom) {
+    return res.status(404).json({message: "New room not found"})
+  }
+  if (newRoom.roomStatus !== "available" ){
+    return res.status(400).json({message: "New room is not available"})
+  }
+
+  student.room = newRoom._id
+
+  newRoom.roomOccupancy.push(student._id)
+
+  if (newRoom.roomOccupancy.length >= newRoom.roomOccupancy) {
+    newRoom.roomStatus = "unavailable"
+  }
+
+  await newRoom.save()
+  await student.save()
+
+  res.status(200).json({message: "Room change succesfully", student, newRoom})
+
+});
+
+const updateCheckedInStatus = asyncHandler(async (req, res) => {
+  const {studentId, action} = req.body
+
+  const student = await Student.findById(studentId)
+
+  if (!student) {
+    return res.status(404).json({messge: "Student not found"})
+  }
+
+  if (action === "checkIn"){
+    student.checkIn();
+  } else if(action === "checkOut") {
+    student.checkOut();
+  }else {
+    return res.status(400).json({
+      message: "Invalid action"
+  })
+  }
+
+  await student.save();
+
+  res.status(200).json({message: `Student ${action} successfully`, student})
+ 
+  }
+);
+
+const deleteStudent = asyncHandler(async (req, res) => {
+  const { roomId } = req.params;
+
+  const room = Room.findById(roomId);
+  if (!room) {
+    res.status(404);
+    throw new Error("room not found in database");
+  }
+
+  await room.deleteOne();
+  res.status(200).json({
+    message: "room deleted successfully!",
+  });
+});
 
 module.exports = {
   registerStudent,
