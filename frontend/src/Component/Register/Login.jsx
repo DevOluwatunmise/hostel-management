@@ -1,9 +1,23 @@
-import React from 'react'
+import React, {useState, useCallback, useContext} from 'react'
 import './Register.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import PasswordInput from '../PasswordInput/PasswordInput';
+import { UserContext } from '../../../context/userContext';
+import { Axios } from 'axios';
 
 const Login = () => {
-  return (
+
+  const [formData, setFormData]  = useState({
+    email: "",
+    password: "",
+  })
+
+  const [formValidMessage, setFormValidMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate
+
+    return (
     <div className="container form__ --100vh">
       <div className="form-container">
         <p className="title"> Login as an Admin</p>

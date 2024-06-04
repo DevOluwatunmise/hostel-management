@@ -203,18 +203,38 @@ const updateCheckedInStatus = asyncHandler(async (req, res) => {
 );
 
 const deleteStudent = asyncHandler(async (req, res) => {
-  const { roomId } = req.params;
+  const studentId  = req.params._Id;
 
-  const room = Room.findById(roomId);
-  if (!room) {
+  try{
+   const student = await Student.findById(studentId);
+    if (!student) {
     res.status(404);
-    throw new Error("room not found in database");
-  }
+    throw new Error("Student not found in database");
+   }
 
-  await room.deleteOne();
+   const room = await Room.findById(student.room)
+
+   if (room) {
+    room.roomOccupancy = room.roomOccupancy.filter(
+      (occupant) => occupant.toString() !== studentId
+    )
+
+    if (room.roomOccupancy.length < room.roomCapacity) {
+      room.roomStatus = "available"
+    }
+
+    await room.save()
+  }
+  await student.deleteOne();
   res.status(200).json({
-    message: "room deleted successfully!",
+    message: "Student deleted successfully!",
   });
+} catch (error) {
+  console.error(error.message)
+  res.status(500).json({
+    message: "Internal server error"
+  })
+}
 });
 
 module.exports = {
