@@ -72,6 +72,12 @@ label {
   transform: translateY(-2px);
 }
 
+.error-message {
+  color:red;
+  font-size: 20px;
+
+}
+
 @media (min-width: 992px) and (max-width: 1199px){
  
   .form-container {
