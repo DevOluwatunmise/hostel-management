@@ -1,16 +1,23 @@
-import react from "react";
+import react, {useEffect, useState} from "react";
 import Sidebar from "./Sidebar";
 import "./StudentDashboard.css";
-import { useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { IoMenu, IoCloseSharp  } from "react-icons/io5";
+import {FaPenFancy} from "react-icons/"
+import {confirmAlllert} from "react-confirm-alert";
+import useAuthRedirect from "../../../context/useAuth";
+import axios from "axios";
+import UpdateCheckIn from "../../../Modal/UpdateCheckIn";
+import ChangeStudentRoom from "../../../Modal/ChangeStudentRoom";
+import UpdateStudentProfile from "../../../Modal/UpdateStudentProfile";
+
 
 const studentsData = [
   {
     id: 1,
     name: "Jon Doe",
-    email: "Jon_Doe@outlook.com",
+    email: "Jon_Doe@gmail.com",
     idNumber: "12345",
     gender: "Female",
     age: 23,
@@ -40,7 +47,54 @@ const StudentDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [students, setStudents] = useState(studentsData);
   const [filteredData, setFilteredData] = useState(studentsData);
-  const [sidebarToggle, setSidebarToggle] = useState(false)
+  const [sidebarToggle, setSidebarToggle] = useState(false);
+  const [data, setData] = useState([]);
+  const [message, setMessage] = useState("");
+  const [isMoadalOpen, setIsModalOpen] = useState(false);
+  const [selectedModal, setSelectedModal] = useState("");
+  const [selectedStudent, setSelectedStudent] = useState(null);
+
+
+  useEffect(() => {
+    const fetchStudents = async() => {
+      try {
+        const response = await axios.get("http://localhost:3500/student/");
+        setData(response.data);
+      } catch (error) {
+        console.erroe("Error fetching data:", error)
+      }
+    }
+
+    fetchStudents();
+  },[])
+
+  const handleModalOpen = (student) => {
+    setSelectedStudent(student);
+    setIsModalOpen(true);
+  }
+
+  const handleModalClose = () => {
+    setSelectedModal();
+    setIsModalOpen(false);
+    setSelectedStudent(null);
+  }
+
+  const handleModalSelect = (modalType) => {
+    setSelectedModal(modalType)
+  }
+
+  const removeUser = async (_id) => {
+    try {
+      console.log(`Delete student by id: ${_id}`);
+      const response = await axios.delete(
+        `http://localhost:3500/student/delete-student/${_id}`
+      )
+
+      console.log(response.data)
+    } catch (error) {
+      
+    }
+  }
 
   const handleSearchChange = (e) => {
     // Get the search term from the input field and convert it to lowercase

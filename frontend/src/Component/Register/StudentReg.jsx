@@ -37,6 +37,23 @@ const StudentReg = () => {
     if(!name || !age || !roomNum || !email || !gender || !g_name || !g_email || !nationality) {
       toast.error("All field required")
     }
+
+    axios
+        .post("http://localhost:3500/student/register-student", formData)
+        .then((response) => {
+          console.log(response)
+          setIsSubmitting(false);
+          toast.success("Student Registration successful");
+          navigate("/studentdash");
+        }).catch((error) => {
+          setIsSubmitting(false);
+          const message =
+            error.response?.status === 400
+              ? "A student with the same email already exist"
+              : "Server error, unable to register";
+          setFormValidMessage(message);
+          toast.error(message)
+        });
   }
 
   return (
@@ -44,7 +61,7 @@ const StudentReg = () => {
     <div className="form-container">
       <p className="title"> Student Registration.</p>
 
-      <form className="form">
+      <form className="form" onSubmit={registerStudent}>
         <div className="--dir-column">
           <label htmlFor="name">Student&apos;s Name:</label>
           <input
@@ -103,7 +120,7 @@ const StudentReg = () => {
           <input
             type="text"
             className="input"
-            name="name"
+            name="g_name"
             placeholder="Enter guardian's name"
             required
             onChange={handleInputChange}
@@ -116,7 +133,7 @@ const StudentReg = () => {
           <input
             type="email"
             className="input"
-            name="email"
+            name="g_email"
             placeholder="example@yahoo.com"
             required
             onChange={handleInputChange}
@@ -142,7 +159,7 @@ const StudentReg = () => {
           <input
             type="text"
             className="input"
-            name="text"
+            name="nationality"
             placeholder="Input your Nationality"
             required
             onChange={handleInputChange}
@@ -150,8 +167,14 @@ const StudentReg = () => {
           />
         </div>
 
-        <button className="--btn">Add Student</button>
+        <button className="--btn" disabled={isSubmitting}>
+        {isSubmitting ? "Adding Student...." : "Add Student"}
+        </button>
       </form>
+
+      {formValidMessage && (
+        <p className='error-message'>{formValidMessage}</p>
+      )}
     </div>
   </div>
   )

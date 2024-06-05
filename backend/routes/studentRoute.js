@@ -4,7 +4,7 @@ const router = express.Router();
 const {protect} = require("../middleware/authMiddleware")
 
 
-router.post("/register-student", protect, registerStudent )
+router.post("/register-student", registerStudent )
 router.get("/", protect, getAllStudent)
 router.get("/:_id", protect, getStudent);
 router.patch("/:_id", protect, updateStudentProfile);
