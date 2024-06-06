@@ -1,18 +1,37 @@
 
-import React, { useState } from "react";
+import React, {useContext, useState } from "react";
 import "./Header.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import { IoCloseSharp, IoMenu } from "react-icons/io5";
 import HeaderSideNav from "./HeaderSideNav";
+import { UserContext } from "../../../context/userContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const items = [
-  { title: "Dashboard", url: "/dashboard" },
   { title: "Students", url: "/studentdash" },
   { title: "Rooms", url: "/room" },
 ];
 
-const Header = () => {
+const Header = () => { 
+  const navigate = useNavigate();
+  const {setUser} = useContext(UserContext)
+  const [navToggle, setNavToggle] = useState(false)
   const [isSidebarToggled, setIsSidebarToggled] = useState(false);
+
+  const logOutUser = async () => {
+    try {
+    await axios.post("http://localhost:3500/admin/logout", null, {  //by puttin null, it means once the admin is logout all his credentials most not show againTFse!`
+        withCredentials: true
+      })
+      setUser(null)
+      toast.success("User logged out 😊!")
+      navigate("/login")
+
+    } catch (error) {
+      console.error("Failed to logout", error)
+    }
+  }
 
   return (
     <>
@@ -63,7 +82,7 @@ const Header = () => {
           </div>
 
           <div className="btn__wrapper --flex-center">
-            <button className="btn-primary">New</button>
+            <button className="btn-danger" onClick={logOutUser}>Logout</button>
             <button className="notification">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -81,7 +100,10 @@ const Header = () => {
               </svg>
             </button>
             <div>
-              <img src="/src/assets/asset-1.png" />
+              <Link to="/adminPrev">
+                <img src="/src/assets/asset-1.png" />
+              </Link>
+
             </div>
           </div>
         </nav>

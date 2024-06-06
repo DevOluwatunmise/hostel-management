@@ -6,12 +6,12 @@ import { Link } from "react-router-dom";
 import { IoMenu, IoCloseSharp  } from "react-icons/io5";
 import {FaPenFancy} from "react-icons/fa"
 import {confirmAlert} from "react-confirm-alert";
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 import useAuthRedirect from "../../../context/useAuth";
 import axios from "axios";
-import UpdateCheckIn from "../../../Modal/UpdateCheckIn";
-import ChangeStudentRoom from "../../../Modal/ChangeStudentRoom";
-import UpdateStudentProfile from "../../../Modal/UpdateStudentProfile";
-import 'react-confirm-alert/src/react-confirm-alert.css'; 
+import UpdateCheckIn from "../Modal/UpdateCheckIn";
+import ChangeStudentRoom from "../Modal/ChangeStudentRoom";
+import UpdateStudentProfile from "../Modal/UpdateStudentProfile";
 
 
 

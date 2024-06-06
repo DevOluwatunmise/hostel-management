@@ -1,16 +1,37 @@
 import { useState } from "react";
 import "./StudentDashboard.css";
+import axios from "axios";
 
+//to update/edit room
 const EditStatusModal = ({ room, onUpdateRoom, onClose }) => {
-  const [newStatus, setNewStatus] = useState(room.status);
+  const [newStatus, setNewStatus] = useState(room.roomStatus);
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmiting] = useState(false);
 
   const handleStatusChange = (e) => {
     setNewStatus(e.target.value);
   };
 
-  const handleSubmit = () => {
-    onUpdateRoom(room.roomNumber, newStatus);
-    onClose();
+  const handleSubmit = async () => {
+    setIsSubmiting(true);
+    setError("");
+
+    try {
+      const response = await axios.patch(
+        `http://localhost:3500/room/update-room/${room._id}`,
+        {
+          roomStatus: newStatus,
+        }
+      );
+      console.log("Room updated");
+      onUpdateRoom(response.data);
+      onClose();
+    } catch (error) {
+      setError("Failed to update room status, please try again!");
+      console.log(error);
+    } finally {
+      setIsSubmiting(false);
+    }
   };
 
   return (
@@ -18,8 +39,10 @@ const EditStatusModal = ({ room, onUpdateRoom, onClose }) => {
       <div className="modal-content">
         <h2 className="modal-title">Edit Room Status</h2>
         <p className="room-number">Room Number: {room.roomNumber}</p>
-        <label htmlFor="status" className="status-label">New Status: </label>
-        
+        <label htmlFor="status" className="status-label">
+          New Status:{" "}
+        </label>
+
         <div className="right">
           <input
             type="text"
@@ -31,12 +54,15 @@ const EditStatusModal = ({ room, onUpdateRoom, onClose }) => {
         </div>
 
         <div className="button-group">
-          <button className="save-button" onClick={handleSubmit}>Save</button>
-          <button className="cancel-button" onClick={onClose}> Cancel</button>
+          <button className="save-button" onClick={handleSubmit}>
+            Save
+          </button>
+          <button className="cancel-button" onClick={onClose}>
+            {" "}
+            Cancel
+          </button>
         </div>
-
       </div>
-
     </div>
   );
 };
