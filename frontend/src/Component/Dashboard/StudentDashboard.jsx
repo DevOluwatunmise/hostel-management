@@ -219,7 +219,7 @@ const StudentDashboard = () => {
           onClose={handleModalClose}
         />
       )}
-      {selectedModal === "changeStudentRoom" && (
+      {selectedModal === "ChangeStudentRoom" && (
         <ChangeStudentRoom
           student={selectedStudent}
           onClose={handleModalClose}

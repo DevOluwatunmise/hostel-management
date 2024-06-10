@@ -142,13 +142,13 @@ const updateStudentProfile = asyncHandler(async (req, res) => {
   if (student) {
     const { email, name, age, nationality, gender, guardian } = student;
 
-    student.email = req.body.email || email;
+    student.email =  email;
+    student.gender =  gender;
     student.age = req.body.age || age;
     student.name = req.body.name || name;
     student.nationality = req.body.nationality || nationality;
     student.guardian.guardianName = req.body.g_name || guardian.g_name;
     student.guardian.guardianEmail = req.body.g_email || guardian.g_email;
-    student.gender = req.body.gender || gender;
 
     const updatedStudent = await student.save();
     res.status(200).json(updatedStudent);

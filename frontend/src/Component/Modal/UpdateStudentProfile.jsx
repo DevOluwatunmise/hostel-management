@@ -6,8 +6,8 @@ const UpdateStudentProfile = ({student, onClose}) => {
     name: student.name,
     age: student.age,
     nationality: student.nationality,
-    g_name: student.ugardianName,
-    g_mail: student.guardianEmail
+    g_name: student.guardian.guardianName,
+    g_email: student.guardian.guardianEmail
 
   });
 
@@ -50,7 +50,7 @@ const UpdateStudentProfile = ({student, onClose}) => {
           </div>
           <div>
             <label htmlFor=''>Guardian&apos;s Email</label>
-            <input type= "text" name="g_mail" value={formData.g_mail} onChange={handleChange}/>
+            <input type= "text" name="g_email" value={formData.g_email} onChange={handleChange}/>
           </div>
 
           <button type='submit'>Update</button>
