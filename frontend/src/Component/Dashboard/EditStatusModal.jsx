@@ -18,7 +18,7 @@ const EditStatusModal = ({ room, onUpdateRoom, onClose }) => {
 
     try {
       const response = await axios.patch(
-        `http://localhost:3500/room/update-room/${room._id}`,
+        `https://hostel-management-two.vercel.app/room/update-room/${room._id}`,
         {
           roomStatus: newStatus,
         }

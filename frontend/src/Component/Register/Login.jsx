@@ -41,7 +41,7 @@ const Login = () => {
 
     // axios is used for request(http or Api)
     axios
-        .post(`http://localhost:3500/admin/login`, formData)
+        .post(`https://hostel-management-two.vercel.app/admin/login`, formData)
         .then((response) => {
           setUser(response.data);
           setIsSubmitting(false);

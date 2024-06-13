@@ -21,7 +21,7 @@ const Header = () => {
 
   const logOutUser = async () => {
     try {
-    await axios.post("http://localhost:3500/admin/logout", null, {  //by puttin null, it means once the admin is logout all his credentials most not show againTFse!`
+    await axios.post("https://hostel-management-two.vercel.app/admin/logout", null, {  //by puttin null, it means once the admin is logout all his credentials most not show againTFse!`
         withCredentials: true
       })
       setUser(null)
