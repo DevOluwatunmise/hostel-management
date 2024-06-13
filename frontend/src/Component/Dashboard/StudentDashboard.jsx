@@ -26,7 +26,7 @@ const StudentDashboard = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get("https://hostel-management-two.vercel.app/student/");
+        const response = await axios.get("https://hostel-management-two.vercel.app/student");
         setData(response.data);
       } catch (error) {
         console.erroe("Error fetching data:", error);

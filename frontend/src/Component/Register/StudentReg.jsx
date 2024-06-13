@@ -39,7 +39,7 @@ const StudentReg = () => {
     }
 
     axios
-        .post("https://hostel-management-two.vercel.app/student/register-student", formData)
+        .post("https://hostel-management-two.vercel.app/register-student", formData)
         .then((response) => {
           console.log(response)
           setIsSubmitting(false);
